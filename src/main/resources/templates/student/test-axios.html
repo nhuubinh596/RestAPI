@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quan ly sinh vien</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <button onclick="getStudent()">Danh sach sinh vien</button>
+    <button onclick="postStudent()">Them sinh vien</button>
+    <button onclick="putStudent()">Cap nhat sinh vien (Theo Key)</button>
+    <button onclick="deleteStudent()">Xoa sinh vien (Theo Key)</button>
+    <ul id="listStudent"></ul>
+
+    <script>
+        <!--Hien thi danh sach sinh vien-->
+        function getStudent() {
+            axios.get("https://realtimedb-1d0ee-default-rtdb.asia-southeast1.firebasedatabase.app/students.json")
+                .then(function (response) {
+                const data = response.data;
+                const listElement = document.getElementById("listStudent");
+                listElement.innerHTML = "" ; // Xoa danh sach cu
+                if (!data){
+                    listElement.innerHTML = "<li>Khong co sinh vien nao!</li>"
+                    return;
+                }
+                Object.keys(data).forEach(function (key){
+                   const student = data[key];
+                   const item = document.createElement("li");
+                   item.textContent =
+                       // Đây ko phai là dấu nháy đơn mà là dấu nháy tại dấu ~
+                       `Mã: ${student.id}, Tên: ${student.name}, Điểm: ${student.mark}, Giới tính: ${student.gender ? "Nam" : "Nữ"}` ;
+                   listElement.appendChild(item)
+                });
+            })
+                .catch(function (error){
+                    console.error("Lỗi đọc danh sách sinh viên!", error)
+                })
+        }
+
+        <!--Thêm sinh vien-->
+        function postStudent() {
+            const student = {
+                id : "SV06",
+                name : "Sinh viên 06",
+                mark : "8.0",
+                gender : true
+            };
+            axios.post(`https://realtimedb-1d0ee-default-rtdb.asia-southeast1.firebasedatabase.app/students.json`, student)
+                .then(function (response){
+                    console.log("Them sinh vien thanh cong:", response.data);
+                    alert("Them sinh vien thanh cong!");
+                })
+                .catch(function (error){
+                   console.error("Loi:", error);
+                });
+        }
+
+        <!--Cap nhat sinh vien-->
+        function putStudent() {
+            const key = "-OeQ5ibadlhnm8gwCmE3" // Day la key cua SV01
+            const updateSinhVien = {
+                gender : false,
+                id : "SV01",
+                mark : 9.0, // Diem ban dau: 7.0
+                name : "Sinh viên 01"
+            }
+            // Đây ko phai là dấu nháy đơn mà là dấu nháy tại dấu ~
+            axios.put(`https://realtimedb-1d0ee-default-rtdb.asia-southeast1.firebasedatabase.app/students/${key}.json`, updateSinhVien)
+                .then(function (response){
+                    console.log("Cap nhat sinh vien thanh cong:", response.data);
+                    alert("Cap nhat sinh vien thanh cong!");
+                })
+                .catch(function (error){
+                    console.error("Loi:", error);
+                });
+        }
+
+        <!--Xoa sinh vien-->
+        function deleteStudent() {
+            const key = "-OeQ5seaWUVn56FryFO7" // Day la key cua SV05
+            // Đây ko phai là dấu nháy đơn mà là dấu nháy tại dấu ~
+            axios.delete(`https://realtimedb-1d0ee-default-rtdb.asia-southeast1.firebasedatabase.app/students/${key}.json`)
+                .then(function (response){
+                    console.log("Xoa sinh vien thanh cong:", response.data);
+                    alert("Xoa sinh vien thanh cong!");
+                })
+                .catch(function (error){
+                    console.error("Loi:", error);
+                });
+        }
+    </script>
+</body>
+</html>
