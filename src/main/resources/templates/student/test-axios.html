@@ -7,6 +7,7 @@
 </head>
 <body>
     <button onclick="getStudent()">Danh sach sinh vien</button>
+    <button onclick="getStudentById()">Lay sinh vien theo ma</button>
     <button onclick="postStudent()">Them sinh vien</button>
     <button onclick="putStudent()">Cap nhat sinh vien (Theo Key)</button>
     <button onclick="deleteStudent()">Xoa sinh vien (Theo Key)</button>
@@ -38,6 +39,28 @@
                 })
         }
 
+        <!--Get sinh vien theo id-->
+        function getStudentById() {
+            const key = "-OeQ5ibadlhnm8gwCmE3" // Day la key cua SV01
+            axios.get(`https://realtimedb-1d0ee-default-rtdb.asia-southeast1.firebasedatabase.app/students/${key}.json`)
+                .then(function (response) {
+                    const student = response.data;
+                    const listElement = document.getElementById("listStudent");
+                    listElement.innerHTML = "" ; // Xoa danh sach cu
+                    if (!student){
+                        listElement.innerHTML = "<li>Khong tim thay sinh vien nao!</li>"
+                        return;
+                    }
+                    const item = document.createElement("li");
+                    item.textContent =
+                        `Mã: ${student.id}, Tên: ${student.name}, Điểm: ${student.mark}, Giới tính: ${student.gender ? "Nam" : "Nữ"}` ;
+                    listElement.appendChild(item);
+                })
+                .catch(function (error){
+                    console.error("Lỗi khi doc sinh vien theo Id!", error)
+                })
+        }
+
         <!--Thêm sinh vien-->
         function postStudent() {
             const student = {
@@ -57,28 +80,28 @@
         }
 
         <!--Cap nhat sinh vien-->
-        function putStudent() {
-            const key = "-OeQ5ibadlhnm8gwCmE3" // Day la key cua SV01
-            const updateSinhVien = {
-                gender : false,
-                id : "SV01",
-                mark : 9.0, // Diem ban dau: 7.0
-                name : "Sinh viên 01"
+            function putStudent() {
+                const key = "-OeQ5ibadlhnm8gwCmE3" // Day la key cua SV01
+                const updateSinhVien = {
+                    gender : false,
+                    id : "SV01",
+                    mark : 9.0, // Diem ban dau: 7.0
+                    name : "Sinh viên 01"
+                }
+                // Đây ko phai là dấu nháy đơn mà là dấu nháy tại dấu ~
+                axios.put(`https://realtimedb-1d0ee-default-rtdb.asia-southeast1.firebasedatabase.app/students/${key}.json`, updateSinhVien)
+                    .then(function (response){
+                        console.log("Cap nhat sinh vien thanh cong:", response.data);
+                        alert("Cap nhat sinh vien thanh cong!");
+                    })
+                    .catch(function (error){
+                        console.error("Loi:", error);
+                    });
             }
-            // Đây ko phai là dấu nháy đơn mà là dấu nháy tại dấu ~
-            axios.put(`https://realtimedb-1d0ee-default-rtdb.asia-southeast1.firebasedatabase.app/students/${key}.json`, updateSinhVien)
-                .then(function (response){
-                    console.log("Cap nhat sinh vien thanh cong:", response.data);
-                    alert("Cap nhat sinh vien thanh cong!");
-                })
-                .catch(function (error){
-                    console.error("Loi:", error);
-                });
-        }
 
         <!--Xoa sinh vien-->
         function deleteStudent() {
-            const key = "-OeQ5seaWUVn56FryFO7" // Day la key cua SV05
+            const key = "-Oe_S3Yx-oF2n_BCVfW-" // Day la key cua SV05
             // Đây ko phai là dấu nháy đơn mà là dấu nháy tại dấu ~
             axios.delete(`https://realtimedb-1d0ee-default-rtdb.asia-southeast1.firebasedatabase.app/students/${key}.json`)
                 .then(function (response){
