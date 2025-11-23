@@ -1,4 +1,4 @@
-package com.example.restapi.controller;
+package com.example.restapi.controller.Lab4;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SinhVienController {
     @RequestMapping("/lab4-bai3")
     public String testAxios() {
-        return "/student-crud";
+        return "/lab4/student-crud";
     }
 }
